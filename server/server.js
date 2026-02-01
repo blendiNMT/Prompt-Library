@@ -105,8 +105,8 @@ app.use((err, req, res, next) => {
     res.status(500).json({ error: 'Etwas ist schiefgelaufen!' });
 });
 
-app.listen(PORT, () => {
-    console.log(`Server läuft auf http://localhost:${PORT}`);
+app.listen(PORT, '0.0.0.0', () => {
+    console.log(`Server läuft auf Port ${PORT}`);
     if (APP_PASSWORD === 'demo123') {
         console.log('⚠️  WARNUNG: Standard-Passwort wird verwendet. Setze APP_PASSWORD für Produktion!');
     }
