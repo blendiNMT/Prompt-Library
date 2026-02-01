@@ -19,7 +19,7 @@ export function DataProvider({ children }) {
   // Kategorien laden
   const fetchCategories = useCallback(async () => {
     try {
-      const res = await fetch(`${API_BASE}/categories`)
+      const res = await fetch(`${API_BASE}/categories`, { credentials: 'include' })
       const data = await res.json()
       setCategories(data)
     } catch (error) {
@@ -38,7 +38,7 @@ export function DataProvider({ children }) {
       if (filters.is_building_block !== undefined) params.append('is_building_block', filters.is_building_block)
       if (filters.parent_id !== undefined) params.append('parent_id', filters.parent_id)
 
-      const res = await fetch(`${API_BASE}/prompts?${params}`)
+      const res = await fetch(`${API_BASE}/prompts?${params}`, { credentials: 'include' })
       const data = await res.json()
       setPrompts(data)
     } catch (error) {
@@ -49,7 +49,7 @@ export function DataProvider({ children }) {
   // Tags laden
   const fetchTags = useCallback(async () => {
     try {
-      const res = await fetch(`${API_BASE}/tags`)
+      const res = await fetch(`${API_BASE}/tags`, { credentials: 'include' })
       const data = await res.json()
       setTags(data)
     } catch (error) {
@@ -60,7 +60,7 @@ export function DataProvider({ children }) {
   // KI-Plattformen laden
   const fetchAiPlatforms = useCallback(async () => {
     try {
-      const res = await fetch(`${API_BASE}/ai-platforms`)
+      const res = await fetch(`${API_BASE}/ai-platforms`, { credentials: 'include' })
       const data = await res.json()
       setAiPlatforms(data)
     } catch (error) {
@@ -78,7 +78,7 @@ export function DataProvider({ children }) {
       if (filters.search) params.append('search', filters.search)
       if (filters.is_favorite) params.append('is_favorite', 'true')
 
-      const res = await fetch(`${API_BASE}/ai-responses?${params}`)
+      const res = await fetch(`${API_BASE}/ai-responses?${params}`, { credentials: 'include' })
       const data = await res.json()
       setAiResponses(data)
     } catch (error) {
@@ -111,6 +111,7 @@ export function DataProvider({ children }) {
     const res = await fetch(`${API_BASE}/prompts`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
       body: JSON.stringify(promptData)
     })
     const newPrompt = await res.json()
@@ -123,6 +124,7 @@ export function DataProvider({ children }) {
     const res = await fetch(`${API_BASE}/prompts/${id}`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
       body: JSON.stringify(promptData)
     })
     const updated = await res.json()
@@ -131,13 +133,13 @@ export function DataProvider({ children }) {
   }
 
   const deletePrompt = async (id) => {
-    await fetch(`${API_BASE}/prompts/${id}`, { method: 'DELETE' })
+    await fetch(`${API_BASE}/prompts/${id}`, { method: 'DELETE', credentials: 'include' })
     await fetchPrompts()
     await fetchCategories()
   }
 
   const copyPrompt = async (id) => {
-    await fetch(`${API_BASE}/prompts/${id}/copy`, { method: 'POST' })
+    await fetch(`${API_BASE}/prompts/${id}/copy`, { method: 'POST', credentials: 'include' })
     await fetchPrompts()
   }
 
@@ -145,6 +147,7 @@ export function DataProvider({ children }) {
     const res = await fetch(`${API_BASE}/categories`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
       body: JSON.stringify(categoryData)
     })
     const newCategory = await res.json()
@@ -156,6 +159,7 @@ export function DataProvider({ children }) {
     const res = await fetch(`${API_BASE}/categories/${id}`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
       body: JSON.stringify(categoryData)
     })
     const updated = await res.json()
@@ -164,7 +168,7 @@ export function DataProvider({ children }) {
   }
 
   const deleteCategory = async (id) => {
-    await fetch(`${API_BASE}/categories/${id}`, { method: 'DELETE' })
+    await fetch(`${API_BASE}/categories/${id}`, { method: 'DELETE', credentials: 'include' })
     await fetchCategories()
     await fetchPrompts()
   }
@@ -173,6 +177,7 @@ export function DataProvider({ children }) {
     const res = await fetch(`${API_BASE}/tags`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
       body: JSON.stringify(tagData)
     })
     const newTag = await res.json()
@@ -181,7 +186,7 @@ export function DataProvider({ children }) {
   }
 
   const deleteTag = async (id) => {
-    await fetch(`${API_BASE}/tags/${id}`, { method: 'DELETE' })
+    await fetch(`${API_BASE}/tags/${id}`, { method: 'DELETE', credentials: 'include' })
     await fetchTags()
   }
 
@@ -190,6 +195,7 @@ export function DataProvider({ children }) {
     const res = await fetch(`${API_BASE}/ai-responses`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
       body: JSON.stringify(responseData)
     })
     const newResponse = await res.json()
@@ -201,6 +207,7 @@ export function DataProvider({ children }) {
     const res = await fetch(`${API_BASE}/ai-responses/${id}`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
       body: JSON.stringify(responseData)
     })
     const updated = await res.json()
@@ -209,18 +216,18 @@ export function DataProvider({ children }) {
   }
 
   const deleteAiResponse = async (id) => {
-    await fetch(`${API_BASE}/ai-responses/${id}`, { method: 'DELETE' })
+    await fetch(`${API_BASE}/ai-responses/${id}`, { method: 'DELETE', credentials: 'include' })
     await fetchAiResponses()
   }
 
   const toggleAiResponseFavorite = async (id) => {
-    await fetch(`${API_BASE}/ai-responses/${id}/favorite`, { method: 'POST' })
+    await fetch(`${API_BASE}/ai-responses/${id}/favorite`, { method: 'POST', credentials: 'include' })
     await fetchAiResponses()
   }
 
   // Export/Import
   const exportData = async () => {
-    const res = await fetch(`${API_BASE}/export`)
+    const res = await fetch(`${API_BASE}/export`, { credentials: 'include' })
     const data = await res.json()
     const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' })
     const url = URL.createObjectURL(blob)
@@ -235,6 +242,7 @@ export function DataProvider({ children }) {
     const res = await fetch(`${API_BASE}/import`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
       body: JSON.stringify({ data: jsonData, merge })
     })
     if (res.ok) {
