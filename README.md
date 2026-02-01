@@ -93,3 +93,4 @@ prompt-sammlung/
 - **Backend**: Node.js, Express
 - **Datenbank**: SQLite (better-sqlite3)
 - **Icons**: Lucide React
+# Prompt-Library
