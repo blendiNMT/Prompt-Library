@@ -66,6 +66,11 @@ app.get('/api/auth/status', (req, res) => {
     res.json({ authenticated: !!(req.session && req.session.authenticated) });
 });
 
+// Health Check für Railway (vor Auth-Middleware!)
+app.get('/health', (req, res) => {
+    res.status(200).json({ status: 'ok', timestamp: new Date().toISOString() });
+});
+
 // Uploads - öffentlich für Bilder
 app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 
