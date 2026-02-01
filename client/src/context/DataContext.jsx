@@ -1,10 +1,12 @@
 import { createContext, useContext, useState, useEffect, useCallback } from 'react'
+import { useAuth } from './AuthContext'
 
 const DataContext = createContext()
 
 const API_BASE = '/api'
 
 export function DataProvider({ children }) {
+  const { isAuthenticated } = useAuth()
   const [categories, setCategories] = useState([])
   const [prompts, setPrompts] = useState([])
   const [tags, setTags] = useState([])
@@ -86,15 +88,19 @@ export function DataProvider({ children }) {
     }
   }, [])
 
-  // Initial laden
+  // Initial laden - nur wenn eingeloggt
   useEffect(() => {
+    if (!isAuthenticated) {
+      setLoading(false)
+      return
+    }
     const loadData = async () => {
       setLoading(true)
       await Promise.all([fetchCategories(), fetchPrompts(), fetchTags(), fetchAiPlatforms(), fetchAiResponses()])
       setLoading(false)
     }
     loadData()
-  }, [fetchCategories, fetchPrompts, fetchTags, fetchAiPlatforms, fetchAiResponses])
+  }, [isAuthenticated, fetchCategories, fetchPrompts, fetchTags, fetchAiPlatforms, fetchAiResponses])
 
   // Prompts neu laden wenn Filter sich ändern
   useEffect(() => {
