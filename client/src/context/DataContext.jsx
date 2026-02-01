@@ -22,8 +22,9 @@ export function DataProvider({ children }) {
   const fetchCategories = useCallback(async () => {
     try {
       const res = await fetch(`${API_BASE}/categories`, { credentials: 'include' })
+      if (!res.ok) return
       const data = await res.json()
-      setCategories(data)
+      if (Array.isArray(data)) setCategories(data)
     } catch (error) {
       console.error('Fehler beim Laden der Kategorien:', error)
     }
@@ -41,8 +42,9 @@ export function DataProvider({ children }) {
       if (filters.parent_id !== undefined) params.append('parent_id', filters.parent_id)
 
       const res = await fetch(`${API_BASE}/prompts?${params}`, { credentials: 'include' })
+      if (!res.ok) return
       const data = await res.json()
-      setPrompts(data)
+      if (Array.isArray(data)) setPrompts(data)
     } catch (error) {
       console.error('Fehler beim Laden der Prompts:', error)
     }
@@ -52,8 +54,9 @@ export function DataProvider({ children }) {
   const fetchTags = useCallback(async () => {
     try {
       const res = await fetch(`${API_BASE}/tags`, { credentials: 'include' })
+      if (!res.ok) return
       const data = await res.json()
-      setTags(data)
+      if (Array.isArray(data)) setTags(data)
     } catch (error) {
       console.error('Fehler beim Laden der Tags:', error)
     }
@@ -63,8 +66,9 @@ export function DataProvider({ children }) {
   const fetchAiPlatforms = useCallback(async () => {
     try {
       const res = await fetch(`${API_BASE}/ai-platforms`, { credentials: 'include' })
+      if (!res.ok) return
       const data = await res.json()
-      setAiPlatforms(data)
+      if (Array.isArray(data)) setAiPlatforms(data)
     } catch (error) {
       console.error('Fehler beim Laden der KI-Plattformen:', error)
     }
@@ -81,8 +85,9 @@ export function DataProvider({ children }) {
       if (filters.is_favorite) params.append('is_favorite', 'true')
 
       const res = await fetch(`${API_BASE}/ai-responses?${params}`, { credentials: 'include' })
+      if (!res.ok) return
       const data = await res.json()
-      setAiResponses(data)
+      if (Array.isArray(data)) setAiResponses(data)
     } catch (error) {
       console.error('Fehler beim Laden der KI-Antworten:', error)
     }
@@ -102,15 +107,16 @@ export function DataProvider({ children }) {
     loadData()
   }, [isAuthenticated, fetchCategories, fetchPrompts, fetchTags, fetchAiPlatforms, fetchAiResponses])
 
-  // Prompts neu laden wenn Filter sich ändern
+  // Prompts neu laden wenn Filter sich ändern - nur wenn eingeloggt
   useEffect(() => {
+    if (!isAuthenticated) return
     const filters = {}
     if (selectedCategory) filters.category_id = selectedCategory
     if (selectedTags.length > 0) filters.tag_id = selectedTags[0]
     if (selectedAiPlatform) filters.ai_platform_id = selectedAiPlatform
     if (searchQuery) filters.search = searchQuery
     fetchPrompts(filters)
-  }, [selectedCategory, selectedTags, selectedAiPlatform, searchQuery, fetchPrompts])
+  }, [isAuthenticated, selectedCategory, selectedTags, selectedAiPlatform, searchQuery, fetchPrompts])
 
   // CRUD Operationen
   const createPrompt = async (promptData) => {
