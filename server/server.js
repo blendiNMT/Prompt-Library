@@ -98,9 +98,15 @@ app.use('/api', exportRoutes);
 
 // Serve static files in production
 if (process.env.NODE_ENV === 'production') {
-    app.use(express.static(path.join(__dirname, '../client/dist')));
+    const distPath = path.join(__dirname, '../client/dist');
+    console.log('Serving static files from:', distPath);
+    console.log('Directory exists:', require('fs').existsSync(distPath));
+
+    app.use(express.static(distPath));
     app.get('*', (req, res) => {
-        res.sendFile(path.join(__dirname, '../client/dist/index.html'));
+        const indexPath = path.join(distPath, 'index.html');
+        console.log('Serving index.html from:', indexPath);
+        res.sendFile(indexPath);
     });
 }
 
