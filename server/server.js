@@ -6,6 +6,11 @@ const session = require('express-session');
 const app = express();
 const PORT = process.env.PORT || 3001;
 
+// Trust proxy für Render/Heroku (wichtig für secure cookies)
+if (process.env.NODE_ENV === 'production') {
+    app.set('trust proxy', 1);
+}
+
 // Das Passwort wird aus der Umgebungsvariable gelesen
 // Setze APP_PASSWORD beim Deployment
 const APP_PASSWORD = process.env.APP_PASSWORD || 'demo123';
@@ -25,6 +30,7 @@ app.use(session({
     cookie: {
         secure: process.env.NODE_ENV === 'production',
         httpOnly: true,
+        sameSite: 'lax',
         maxAge: 7 * 24 * 60 * 60 * 1000 // 7 Tage
     }
 }));
